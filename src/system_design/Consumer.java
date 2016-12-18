@@ -5,5 +5,4 @@ public class Consumer {
 		// TODO Auto-generated method stub
 		System.out.println("Hi, I am Consumer");
 	}
-
 }
