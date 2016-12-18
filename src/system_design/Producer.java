@@ -19,33 +19,9 @@ import javax.jms.TextMessage;
 public class Producer {
  
     public static void main(String[] args) throws Exception {
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
+        thread(new HelloWorldProducer(), true);
+        thread(new HelloWorldConsumer(), true);
         Thread.sleep(1000);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        Thread.sleep(1000);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldProducer(), false);
-        Thread.sleep(1000);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldConsumer(), false);
-        thread(new HelloWorldProducer(), false);
     }
  
     public static void thread(Runnable runnable, boolean daemon) {
@@ -74,18 +50,21 @@ public class Producer {
                 MessageProducer producer = session.createProducer(destination);
                 producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
  
-                // Create a messages
-                String text = "Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode();
-                TextMessage message = session.createTextMessage(text);
- 
-                // Tell the producer to send the message
-                System.out.println("Sent message: "+ message.hashCode() + " : " + Thread.currentThread().getName());
-                producer.send(message);
- 
+                int iLoop = 10;
+                while(iLoop > 0) {
+	                // Create a messages
+	                String text = "Hello world! From: " + Thread.currentThread().getName() + " : " + this.hashCode();
+	                TextMessage message = session.createTextMessage(text);
+	 
+	                // Tell the producer to send the message
+	                System.out.println("Sent message: "+text + message.hashCode() + " : " + Thread.currentThread().getName());
+	                producer.send(message);
+	                iLoop--;
+	            }
                 // Clean up
                 session.close();
                 connection.close();
-            }
+            	}
             catch (Exception e) {
                 System.out.println("Caught: " + e);
                 e.printStackTrace();
@@ -116,16 +95,19 @@ public class Producer {
                 MessageConsumer consumer = session.createConsumer(destination);
  
                 // Wait for a message
-                Message message = consumer.receive(1000);
- 
-                if (message instanceof TextMessage) {
-                    TextMessage textMessage = (TextMessage) message;
-                    String text = textMessage.getText();
-                    System.out.println("Received: " + text);
-                } else {
-                    System.out.println("Received: " + message);
+                int iLoop = 20;
+                while(iLoop > 0){
+	                Message message = consumer.receive(1000);
+	 
+	                if (message instanceof TextMessage) {
+	                    TextMessage textMessage = (TextMessage) message;
+	                    String text = textMessage.getText();
+	                    System.out.println("Received: " + text);
+	                } else {
+	                    System.out.println("Received: " + message);
+	                }
+	                iLoop--;
                 }
- 
                 consumer.close();
                 session.close();
                 connection.close();
