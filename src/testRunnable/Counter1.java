@@ -26,6 +26,7 @@ class addingThread extends Thread {
 		      } catch (InterruptedException e){}
 		      if(runningFlag) 
 		      System.out.println(count++);
+		      counter.t.setText(Integer.toString(count));
 		    }
 		  }
 }
@@ -35,7 +36,7 @@ public class Counter1 extends Applet {
   private Button 
     onOff = new Button("Toggle"),
     start = new Button("Start");
-  private TextField t = new TextField(10);
+  TextField t = new TextField(10);
   private boolean runFlag = true;
   private addingThread ps = null;
   public void init() {
